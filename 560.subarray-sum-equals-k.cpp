@@ -33,42 +33,24 @@
 class Solution {
 public:
     int subarraySum(vector<int>& nums, int k) {
-        std::unordered_map<long, vector<int>> map;
+        std::unordered_map<int, int> map;
 
-        long tmp=0;
+        int tmp=0;
         int result=0;
-        long pre_sum = 0;
-        int k_;
+        map[0] = 1;
         for(int i=0; i<nums.size(); i++){
             tmp += nums[i];
-            std::cout<<i<<endl;
+            if(map.find(tmp - k) != map.end()){
+                result += map[tmp - k];
+            }
             if(map.find(tmp) != map.end()){
-                map[tmp].push_back(i);
+                map[tmp] += 1;
             }
             else{
-                vector<int> tmp_v;
-                tmp_v.push_back(i);
-                map[tmp] = tmp_v;
+                map[tmp] = 1;
             }
+        }
 
-            std::cout<<tmp<<" "<<endl;
-        }
-        std::cout<<"####"<<endl;
-        std::unordered_map<long, vector<int>>::iterator itr;
-        for(int i=0; i<nums.size(); i++){
-            k_ = k + pre_sum;
-            std::cout<<k_<<endl;
-            itr = map.find(k_);
-            if(itr != map.end()){
-               for(int j=0; j<map[k_].size(); j++){
-                    if(i <= map[k_][j])
-                        result += 1;  
-               }
-               std::cout<<k_<<" result: "<<result<<endl;
-            }
-           pre_sum += nums[i];
-    
-        }
         return result;
     }
 };
