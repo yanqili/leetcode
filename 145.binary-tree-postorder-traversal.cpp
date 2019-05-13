@@ -42,33 +42,41 @@ class Solution {
 public:
     vector<int> postorderTraversal(TreeNode* root) {
         stack<TreeNode*> st;
+        stack<TreeNode*> st_f; //保存已经探索过right分支的node
         vector<int> result;
-        TreeNode* tmp = root;
-        TreeNode* last = NULL;
-        
-        while(tmp!=NULL)
-        {
-            st.push(tmp);
-            tmp = tmp->left;
+        TreeNode* tmp;
+        TreeNode* tmp_r = NULL;
+        while(root!=NULL){
+            st.push(root);
+            root = root->left;
         }
-
         while(st.size()!=0){
             tmp = st.top();
-            if(tmp->right && tmp->right != last){
-                tmp = tmp->right;
-                while(tmp!=NULL)
-                {
-                    st.push(tmp);
-                    tmp = tmp->left;
-                }
+            if(st_f.size()!=0 && tmp == st_f.top()){ // 已探索过该节点的right分支，可直接取出了
+                result.push_back(tmp->val);
+                st_f.pop();
+                st.pop();
             }
             else{
-                result.push_back(tmp->val);
-                st.pop();
-                last = tmp;
-            }
+                if(tmp->right){
+                    st_f.push(tmp);
+                    tmp = tmp->right;
+                    while(tmp!=NULL){
+                        st.push(tmp);
+                        tmp = tmp->left;
+                    }
+                }
+                else{
+                    tmp = st.top();
+                    st.pop();
+                    result.push_back(tmp->val);
+                }
+                
+                
+
+          }        
         }
-        return result;
+    return result;
     }
 };
 
