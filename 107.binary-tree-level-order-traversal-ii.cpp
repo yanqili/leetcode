@@ -14,51 +14,35 @@
  */
 class Solution {
 public:
-    vector<vector<int>> levelOrderBottom(TreeNode* root) {
-        queue<TreeNode*> q1,q2;
-        stack<vector<int>> st;
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {           
         vector<vector<int>> result;
+        stack<vector<int>> st;
+        vector<int> tmp_v;
+        queue<TreeNode*> q;
+        TreeNode* R; //下一层最右边的节点
         if(root == NULL)
             return result;
-        q1.push(root);
-        while(q1.size()!=0 || q2.size() != 0)
-        {
-            vector<int> tmp_v;
-            TreeNode* tmp;
-            if(q1.size()!=0){
-                
-                while(q1.size()!=0){
-                    tmp = q1.front();
-                    if(tmp->left)
-                        q2.push(tmp->left);
-                    if(tmp->right)
-                        q2.push(tmp->right);
+        q.push(root);
+        R = root;
+        while(q.size()!=0){
+            TreeNode* tmp = q.front();
+            if(tmp->left)
+                q.push(tmp->left);
+            if(tmp->right)
+                q.push(tmp->right);
 
-                    tmp_v.push_back(tmp->val);
-                    q1.pop();
-                }
-            
-                st.push(tmp_v);
-                tmp_v.clear();
-            }
-            
-
-            if(q2.size()!=0){
-                
-                while(q2.size()!=0){
-                    tmp = q2.front();
-                    if(tmp->left)
-                        q1.push(tmp->left);
-                    if(tmp->right)
-                        q1.push(tmp->right);
-
-                    tmp_v.push_back(tmp->val);
-                    q2.pop();
+            tmp_v.push_back(tmp->val);    
+            if(tmp == R){
+                if(q.size()!=0) // 最后一层不需要更新R
+                {
+                    R = q.back();
+                 
                 }
                 st.push(tmp_v);
+                tmp_v.clear();           
             }
-            
-            
+             
+            q.pop();
         }
         while(st.size()!=0){
             result.push_back(st.top());
